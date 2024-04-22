@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Load bb.css -->
+    <link href="{% static 'node_modules/billboard.js/dist/billboard.css' %}" rel="stylesheet">
+
+    <!-- Load d3.js and bb.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.js"></script>
+    <script src="{% static 'node_modules/billboard.js/dist/billboard.js' %}"></script>
+    <title>test</title>
+</head>
+<body>
+    <button onclick="startLoop()">Start Loop</button>
+    <button onclick="stopLoop()">Stop Loop</button>
+
+    <h1>Teplota [°C]</h1>
+    <div id="temp_chart"></div>
+    <h1>Vlhkosť [%]</h1>
+    <div id="humidity_chart"></div>
+    <h1>Tlak [hPa]</h1>
+    <div id="pressure_chart"></div>
+
+    <script>
+        let charts = [
+            {id: 'temp_chart', label: 'Teplota'},
+            {id: 'humidity_chart', label: 'Vlhkosť'},
+            {id: 'pressure_chart', label: 'Tlak'},
+        ];
+
+        // Create charts
+        charts.forEach(chart => {
+            chart.chart = bb.generate({
+                bindto: `#${chart.id}`,
+                data: {
+                    xs: {
+                        [chart.label]: 'x',
+                    },
+                    columns: [
+                        ['x'],
+                        [chart.label],
+                    ],
+                },
+                axis: {
+                    x: {
+                        type: 'timeseries',
+                        tick: {
+                            rotate: -30,
+                            format: '%H:%M:%S',
+                            fit: false,
+                            count: 15
+                        }
+                    }
+                },
+                legend: {
+                    show: false
+                },              
+            });
+        });
+
+        // Function to update all charts
+        function updateCharts() {
+            fetch('/get_charts_data')
+            .then(response => response.json())
+            .then(data => {
+                data.charts_data.forEach((y_data, i) => {
+                    let x_data = data.x_data.map(datetime => new Date(datetime));
+
+                    charts[i].chart.load({
+                        columns: [
+                            ['x', ...x_data],
+                            [charts[i].label, ...y_data],
+                        ]
+                    });
+                });
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Update the plot immediately when the page loads
+        updateCharts();
+
+        // Start updating the plot every second
+        function startLoop() {
+            window.loop = setInterval(updateCharts, 1000);
+        }
+
+        // Stop updating the plot
+        function stopLoop() {
+            clearInterval(window.loop);
+        }
+
+            
+    </script>
+        
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        .bb-line {
+            stroke: orange;
+            stroke-width: 6px;
+            
+        }
+    </style>
+
+</body>
+</html>

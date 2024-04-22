@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>test</title>
+</head>
+<body>
+    <div id="plot">
+        {% autoescape off %}
+        {{ plot_div }}
+        {% endautoescape %}
+    </div>
+
+    <script>
+        function updatePlot() {
+            fetch('/get_plot')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('plot').innerHTML = data.plot_div;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    
+        // Update the plot immediately when the page loads
+        //updatePlot();
+    
+        // Update the plot every 100 seconds
+        //setInterval(updatePlot, 100000);
+    </script>
+
+    <style>
+        #plot {
+            width: 100vw;
+        }
+    </style>
+
+</body>
+</html>
