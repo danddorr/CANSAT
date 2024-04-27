@@ -9,8 +9,8 @@ from datetime import datetime
 def index(request): 
     return render(request, "index.html")
 
-def get_charts_data(request):
-    all_data = list(reversed(RealTimeData.objects.all().order_by('date_time')))[:30]
+def get_charts_data(request, amount):
+    all_data = list(reversed(RealTimeData.objects.all().order_by('date_time')))[:amount]
     x_data = [data.date_time for data in all_data]
     y_data_temp = [data.temperature for data in all_data]
     y_data_humidity = [data.humidity for data in all_data]

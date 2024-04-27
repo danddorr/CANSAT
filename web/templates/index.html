@@ -13,15 +13,15 @@
     <title>test</title>
 </head>
 <body>
-    <button onclick="startLoop()">Start Loop</button>
-    <button onclick="stopLoop()">Stop Loop</button>
-
-    <h1>Teplota [°C]</h1>
-    <div id="temp_chart"></div>
-    <h1>Vlhkosť [%]</h1>
-    <div id="humidity_chart"></div>
-    <h1>Tlak [hPa]</h1>
-    <div id="pressure_chart"></div>
+    <div id="loop-control">
+        <button onclick="startLoop()">Start Loop</button>
+        <button onclick="stopLoop()">Stop Loop</button>
+    </div>
+    <div id="records-amount">
+        <p>Počet záznamov na zobrazenie: </p>
+        <input type="number" id="records-amount-input" value="10" min="3" max="50">
+    </div>
+    <div id="charts"></div>
 
     <script>
         let charts = [
@@ -32,6 +32,14 @@
 
         // Create charts
         charts.forEach(chart => {
+            chart_h1 = document.createElement('h1')
+            chart_h1.innerHTML = chart.label
+            document.getElementById('charts').appendChild(chart_h1)
+
+            chart_div = document.createElement('div')
+            chart_div.id = chart.id
+            document.getElementById('charts').appendChild(chart_div)
+
             chart.chart = bb.generate({
                 bindto: `#${chart.id}`,
                 data: {
@@ -50,7 +58,7 @@
                             rotate: -30,
                             format: '%H:%M:%S',
                             fit: false,
-                            count: 15
+                            count: 5
                         }
                     }
                 },
@@ -60,9 +68,20 @@
             });
         });
 
+        const records_amount_input = document.getElementById('records-amount-input');
+        records_amount_input.addEventListener('change', () => {
+            if (!window.loop) {
+                updateCharts();
+            }
+        });
+
         // Function to update all charts
         function updateCharts() {
-            fetch('/get_charts_data')
+            let records_amount = records_amount_input.value;
+            if (records_amount < 3 || records_amount > 50) {
+                return;
+            }
+            fetch(`/get_charts_data/${records_amount}/`)
             .then(response => response.json())
             .then(data => {
                 data.charts_data.forEach((y_data, i) => {
@@ -103,6 +122,11 @@
         .bb-line {
             stroke: orange;
             stroke-width: 6px;
+            
+        }
+
+        #records-amount-input:invalid {
+            border: 3px solid red;
             
         }
     </style>
