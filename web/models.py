@@ -3,8 +3,8 @@ from django.db import models
 class RealTimeData(models.Model):
     date_time = models.DateTimeField()
     temperature = models.FloatField(default = 0)
-    humidity = models.FloatField(default = 0)
     pressure = models.FloatField(default = 0)
+    solar_radiation = models.FloatField(default = 0)
     #altitude = models.FloatField()
 
     def __str__(self):
