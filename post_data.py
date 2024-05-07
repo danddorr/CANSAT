@@ -13,7 +13,10 @@ data = {
     "date_time": input_parsed[0],
     "temperature": float(input_parsed[1]),
     "pressure": float(input_parsed[2]),
-    "solar_radiation": float(input_parsed[3])
+    "solar_radiation": float(input_parsed[3]),
+    "latitude": 48.6211,
+    "longitude": 18.3371,
+    "altitude": 1000.0
 }
 
 print(data)

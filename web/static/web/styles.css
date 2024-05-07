@@ -13,6 +13,7 @@ body {
     margin: 0;
     padding: 10px;
     background-color: #f0f0f0;
+    color: #f0f0f0;
 }
 
 #header {
@@ -50,6 +51,12 @@ body {
 
 .chart {
     height: 32vh;
+}
+
+@media (min-width: 900px) {
+    .chart {
+        height: 35vh;
+    }
 }
 
 .bb-line {

@@ -1,5 +1,5 @@
 // Create a Leaflet map instance
-var map = L.map('map').setView([48.621136, 18.337101], 13);
+var map = L.map('map', {attributionControl: false}).setView([48.621136, 18.337101], 14);
 
 // Add a tile layer to the map
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -8,4 +8,4 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Add a marker to the map
-var marker = L.marker([48.621136, 18.337101]).addTo(map);
+//let marker = L.marker([48.621136, 18.337101]).addTo(map);

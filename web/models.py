@@ -5,7 +5,9 @@ class RealTimeData(models.Model):
     temperature = models.FloatField(default = 0)
     pressure = models.FloatField(default = 0)
     solar_radiation = models.FloatField(default = 0)
-    #altitude = models.FloatField()
+    latitude = models.FloatField(default = 0)
+    longitude = models.FloatField(default = 0)
+    altitude = models.FloatField(default = 0)
 
     def __str__(self):
         return str(self.date_time) + ' ' + str(self.temperature)
