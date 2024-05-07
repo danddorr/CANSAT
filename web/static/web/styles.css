@@ -1,0 +1,66 @@
+h1, h2 {
+    text-align: center;
+    color: #f0f0f0;
+}
+
+html {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
+
+#header {
+    background-color: #304C60;
+    padding: 5px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+#map {
+    width: 40%;
+    border: 4px solid #304C60;
+    border-radius: 15px;
+    margin-left: 10px;
+}
+
+#charts {
+    display: flex;
+    flex-direction: row;
+    width: 60%;
+    background: #304C60;
+    border-radius: 15px;
+    padding-right: 10px;
+}
+
+#other-panel, #solar-radiation-panel {
+    width: 50%;
+}
+
+.chart {
+    height: 32vh;
+}
+
+.bb-line {
+    stroke-width: 6px;
+}
+
+.bb-axis {
+    fill: #f0f0f0;
+    font-size: 13px;
+}
+
+#records-amount-input:invalid {
+    border: 3px solid red;
+}

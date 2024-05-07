@@ -10,126 +10,32 @@
     <!-- Load d3.js and bb.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.js"></script>
     <script src="{% static 'node_modules/billboard.js/dist/billboard.js' %}"></script>
-    <title>test</title>
+    <link href="{% static 'web/styles.css' %}" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<title>test</title>
 </head>
 <body>
-    <div id="loop-control">
-        <button onclick="startLoop()">Start Loop</button>
-        <button onclick="stopLoop()">Stop Loop</button>
+    <div id="header">
+        <h1>CanZeppelin Dashboard</h1>
+        <div id="loop-control" style="display: none;">
+            <button onclick="startLoop()">Start Loop</button>
+            <button onclick="stopLoop()">Stop Loop</button>
+            <p>Počet záznamov na zobrazenie: </p>
+            <input type="number" id="records-amount-input" value="10" min="3" max="50">
+        </div>
     </div>
-    <div id="records-amount">
-        <p>Počet záznamov na zobrazenie: </p>
-        <input type="number" id="records-amount-input" value="10" min="3" max="50">
+    <div id="main">
+        <div id="charts">
+            <div id="other-panel"></div>
+            <div id="solar-radiation-panel"></div>
+        </div>
+        <div id="map"></div>
     </div>
-    <div id="charts"></div>
 
-    <script>
-        let charts = [
-            {id: 'temp_chart', label: 'Teplota'},
-            {id: 'pressure_chart', label: 'Tlak'},
-            {id: 'solar_radiation_chart', label: 'Intenzita slnečného žiarenia'},
-        ];
-
-        // Create charts
-        charts.forEach(chart => {
-            chart_h1 = document.createElement('h1')
-            chart_h1.innerHTML = chart.label
-            document.getElementById('charts').appendChild(chart_h1)
-
-            chart_div = document.createElement('div')
-            chart_div.id = chart.id
-            document.getElementById('charts').appendChild(chart_div)
-
-            chart.chart = bb.generate({
-                bindto: `#${chart.id}`,
-                data: {
-                    xs: {
-                        [chart.label]: 'x',
-                    },
-                    columns: [
-                        ['x'],
-                        [chart.label],
-                    ],
-                },
-                axis: {
-                    x: {
-                        type: 'timeseries',
-                        tick: {
-                            rotate: -30,
-                            format: '%H:%M:%S',
-                            fit: false,
-                            count: 5
-                        }
-                    }
-                },
-                legend: {
-                    show: false
-                },              
-            });
-        });
-
-        const records_amount_input = document.getElementById('records-amount-input');
-        records_amount_input.addEventListener('change', () => {
-            if (!window.loop) {
-                updateCharts();
-            }
-        });
-
-        // Function to update all charts
-        function updateCharts() {
-            let records_amount = records_amount_input.value;
-            if (records_amount < 3 || records_amount > 50) {
-                return;
-            }
-            fetch(`/get_charts_data/${records_amount}/`)
-            .then(response => response.json())
-            .then(data => {
-                data.charts_data.forEach((y_data, i) => {
-                    let x_data = data.x_data.map(datetime => new Date(datetime));
-
-                    charts[i].chart.load({
-                        columns: [
-                            ['x', ...x_data],
-                            [charts[i].label, ...y_data],
-                        ]
-                    });
-                });
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // Update the plot immediately when the page loads
-        updateCharts();
-
-        // Start updating the plot every second
-        function startLoop() {
-            window.loop = setInterval(updateCharts, 1000);
-        }
-
-        // Stop updating the plot
-        function stopLoop() {
-            clearInterval(window.loop);
-        }
-
-            
-    </script>
+    <script src="{% static 'web/script.js' %}"></script>
+    <script src="{% static 'web/leaflet_map.js' %}"></script>
         
-    <style>
-        h1 {
-            text-align: center;
-        }
-
-        .bb-line {
-            stroke: orange;
-            stroke-width: 6px;
-            
-        }
-
-        #records-amount-input:invalid {
-            border: 3px solid red;
-            
-        }
-    </style>
 
 </body>
 </html>
