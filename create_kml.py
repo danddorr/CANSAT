@@ -140,10 +140,14 @@ def get_data():
 
     if response.status_code == 200:
         data = response.json()
+
         times = data['x_data']
         times = [i.replace(' ', 'T') for i in times]
+
         altitudes = data['charts_data'][3]
+
         coords = data['coords']
+
         return coords, altitudes, times
 
 output_file = 'flight_path.kml'  # Output file name

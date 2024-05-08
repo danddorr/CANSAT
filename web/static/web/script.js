@@ -47,48 +47,43 @@ charts.forEach(chart => {
     });
 });
 
-let start_datetime = document.getElementById('datetime-range-start');
-let end_datetime = document.getElementById('datetime-range-end');
-const datetime_range_check = document.getElementById('datetime-range-check');
+let datetime_range_check = false;
+let current_start_datetime = moment().subtract(1800, 'seconds').startOf('seconds');
+let datetime_diff = moment().diff(current_start_datetime, 'seconds');
 
-start_datetime.addEventListener('change', onDatetimeChange);
-end_datetime.addEventListener('change', onDatetimeChange);
-datetime_range_check.addEventListener('change', onDatetimeChange);
-
-function onDatetimeChange() {
-    if (datetime_range_check.checked) {
-        if (!window.loop) {
-            updateChartsByRange(start_datetime.value, end_datetime.value);
-        }
-    }
-    else {
-        if (!window.loop) {
-            updateChartsByCount();
-        }
+function onDatetimeRangeChange(start_datetime, end_datetime) {
+    datetime_range_check = true;
+    current_start_datetime = start_datetime;
+    datetime_diff = end_datetime.diff(start_datetime, 'seconds');
+    if (!window.loop) {
+        updateChartsByRange(start_datetime.format("YYYY-MM-DDTHH:mm:ss"), end_datetime.format("YYYY-MM-DDTHH:mm:ss"));
     }
 }
 
 const records_amount_input = document.getElementById('records-amount-input');
 records_amount_input.addEventListener('change', () => {
+    datetime_range_check = false;
     if (!window.loop) {
-        updateChartsByCount();
+        console.log(records_amount_input.value);
+        updateChartsByCount(records_amount_input.value);
     }
 });
 
 let marker;
+let last_charts_data = [];
 
 // Function to update all charts
-function updateChartsByCount() {
-    let records_amount = records_amount_input.value;
+function updateChartsByCount(records_amount=10) {
     if (records_amount < 3 || records_amount > 50) {
         return;
     }
     fetch(`/get_charts_data/${records_amount}/`)
     .then(response => response.json())
     .then(data => {
-        let coords = data.coords[data.coords.length-1];
-        let latitude = coords[0];
-        let longitude = coords[1];
+        if (JSON.stringify(data.charts_data) === JSON.stringify(last_charts_data)) {
+            return;
+        }
+        last_charts_data = data.charts_data;
         data.charts_data.forEach((y_data, i) => {
             let x_data = data.x_data.map(datetime => new Date(datetime));
 
@@ -99,15 +94,20 @@ function updateChartsByCount() {
                 ]
             });
         });
-        if (!marker) {
-            console.log('Creating marker');
-            console.log(latitude, longitude);
-            marker = L.marker([latitude, longitude]).addTo(map);
-        }
-        else if (latitude>0 && longitude>0) {
-            console.log('Updating marker');
-            console.log(latitude, longitude);
-            marker.setLatLng([latitude, longitude]);
+        if (data.coords.length > 0) {
+            let coords = data.coords[data.coords.length-1];
+            let latitude = coords[0];
+            let longitude = coords[1];
+            if (!marker) {
+                console.log('Creating marker');
+                console.log(latitude, longitude);
+                marker = L.marker([latitude, longitude]).addTo(map);
+            }
+            else if (latitude>0 && longitude>0) {
+                console.log('Updating marker');
+                console.log(latitude, longitude);
+                marker.setLatLng([latitude, longitude]);
+            }
         }
     })
     .catch(error => console.error('Error:', error));
@@ -117,9 +117,10 @@ function updateChartsByRange(start_datetime, end_datetime) {
     fetch(`/charts_in_range/${start_datetime}/${end_datetime}/`)
     .then(response => response.json())
     .then(data => {
-        let coords = data.coords[data.coords.length-1];
-        let latitude = coords[0];
-        let longitude = coords[1];
+        if (JSON.stringify(data.charts_data) === JSON.stringify(last_charts_data)) {
+            return;
+        }
+        last_charts_data = data.charts_data;
         data.charts_data.forEach((y_data, i) => {
             let x_data = data.x_data.map(datetime => new Date(datetime));
 
@@ -130,31 +131,50 @@ function updateChartsByRange(start_datetime, end_datetime) {
                 ]
             });
         });
-        if (!marker) {
-            console.log('Creating marker');
-            console.log(latitude, longitude);
-            marker = L.marker([latitude, longitude]).addTo(map);
-        }
-        else if (latitude>0 && longitude>0) {
-            console.log('Updating marker');
-            console.log(latitude, longitude);
-            marker.setLatLng([latitude, longitude]);
+        if (data.coords.length > 0) {
+            let coords = data.coords[data.coords.length-1];
+            let latitude = coords[0];
+            let longitude = coords[1];
+            if (!marker) {
+                console.log('Creating marker');
+                console.log(latitude, longitude);
+                marker = L.marker([latitude, longitude]).addTo(map);
+            }
+            else if (latitude>0 && longitude>0) {
+                console.log('Updating marker');
+                console.log(latitude, longitude);
+                marker.setLatLng([latitude, longitude]);
+            }
         }
     })
     .catch(error => console.error('Error:', error));
 }
-
 
 // Update the plot immediately when the page loads
 updateChartsByCount();
 
 // Start updating the plot every second
 function startLoop() {
+    if (window.loop) {
+        return;
+    }
     window.loop = setInterval(() => {
-        if (datetime_range_check.checked) {
-            updateChartsByRange(start_datetime.value, end_datetime.value);
+        if (datetime_range_check) {
+            let current_end_datetime = moment();
+            if (document.getElementById('datetime-range-check').checked){
+                current_start_datetime = moment().subtract(datetime_diff, 'seconds');
+                drp.setStartDate(current_start_datetime);
+            }
+            drp.setEndDate(current_end_datetime);
+            drp.updateRanges({
+                'Today': [moment().startOf('day'), moment().endOf('day')],
+                'Last 1 Minute': [moment().subtract(60, 'seconds').startOf('seconds'), moment().endOf('seconds')],
+                'Last 10 Minutes': [moment().subtract(600, 'seconds').startOf('seconds'), moment().endOf('seconds')],
+                'Last 30 Minutes': [moment().subtract(1800, 'seconds').startOf('seconds'), moment().endOf('seconds')],
+            });
+            updateChartsByRange(current_start_datetime.format('YYYY-MM-DDTHH:mm:ss'), current_end_datetime.format('YYYY-MM-DDTHH:mm:ss'));
         } else {
-            updateChartsByCount();
+            updateChartsByCount(records_amount_input.value);
         }
     }, 1000);
 }
@@ -162,4 +182,5 @@ function startLoop() {
 // Stop updating the plot
 function stopLoop() {
     clearInterval(window.loop);
+    window.loop = null;
 }
