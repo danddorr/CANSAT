@@ -3,8 +3,8 @@ from datetime import datetime
 import random
 from time import sleep
 
-#url = "http://38.242.151.128/set_data/"
-url = "http://127.0.0.1:8000/set_data/"
+url = "http://38.242.151.128/set_data/"
+#url = "http://127.0.0.1:8000/set_data/"
 
 prev_values = {
     "date_time": "",
