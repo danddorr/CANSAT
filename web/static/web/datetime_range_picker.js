@@ -8,6 +8,7 @@ window.addEventListener("load", function (event) {
             alwaysShowCalendars: true,
             showCustomRangeLabel: false,
             opens: 'center',
+            drops: 'up',
             startDate: moment().subtract(1800, 'seconds').startOf('seconds'),
             endDate: moment().endOf('seconds'),
             ranges: {

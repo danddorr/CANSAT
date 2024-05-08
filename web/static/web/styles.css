@@ -1,8 +1,3 @@
-h1, h2 {
-    text-align: center;
-    color: #f0f0f0;
-}
-
 html {
     margin: 0;
     height: 100%;
@@ -14,6 +9,17 @@ body {
     padding: 10px;
     background-color: #f0f0f0;
     color: #f0f0f0;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #f0f0f0;
+}
+
+input, button {
+    padding: 5px;
+    border-radius: 5px;
+    border: 0;
 }
 
 #header {
@@ -29,13 +35,6 @@ body {
     overflow: hidden;
 }
 
-#map {
-    width: 40%;
-    border: 4px solid #304C60;
-    border-radius: 15px;
-    margin-left: 10px;
-}
-
 #charts {
     display: flex;
     flex-direction: row;
@@ -43,6 +42,30 @@ body {
     background: #304C60;
     border-radius: 15px;
     padding-right: 10px;
+}
+
+#right-panel {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    margin-left: 10px;
+}
+
+#map {
+    border: 4px solid #304C60;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    height: 100%;
+}
+
+#loop-control {
+    padding: 10px;
+    background: #304C60;
+    border-radius: 15px;
+}
+
+#datetimerange-input1 {
+    margin: 5px 0;
 }
 
 #other-panel, #solar-radiation-panel {

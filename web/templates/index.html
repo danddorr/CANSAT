@@ -22,23 +22,25 @@
 <body>
     <div id="header">
         <h1 style="font-size: 2.5rem;">CanZeppelin Dashboard</h1>
-        <div id="loop-control" style="display: inline;">
-            <button onclick="startLoop()">Start Loop</button>
-            <button onclick="stopLoop()">Stop Loop</button>
-            <p>Časové rozmedzie záznamov:</p>
-            <input type="checkbox" id="datetime-range-check" name="datetime-range-check">
-            <label for="datetime-range-check">Preserve range</label>
-            <input type="text" id="datetimerange-input1" size="40" style="text-align:center">
-            <p>Počet záznamov na zobrazenie: </p>
-            <input type="number" id="records-amount-input" value="10" min="3" max="50">
-        </div>
     </div>
     <div id="main">
         <div id="charts">
             <div id="other-panel"></div>
             <div id="solar-radiation-panel"></div>
         </div>
-        <div id="map"></div>
+        <div id="right-panel">
+            <div id="map"></div>
+            <div id="loop-control">
+                <button onclick="startLoop()">Start Loop</button>
+                <button onclick="stopLoop()">Stop Loop</button><br>
+                <label for="datetimerange-input1">Časové rozmedzie záznamov:</label>
+                <input type="text" id="datetimerange-input1" size="40">
+                <input type="checkbox" id="datetime-range-check" name="datetime-range-check">
+                <label for="datetime-range-check">Preserve range</label><br>
+                <label for="records-amount-input">Počet záznamov na zobrazenie: </label>
+                <input type="number" name="records-amount-input" id="records-amount-input" value="10" min="3" max="50">
+            </div>
+        </div>
     </div>
 
     <script src="{% static 'web/script.js' %}"></script>
