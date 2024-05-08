@@ -3,6 +3,7 @@ from datetime import datetime
 import random
 from time import sleep
 
+#url = "http://38.242.151.128/set_data/"
 url = "http://127.0.0.1:8000/set_data/"
 
 prev_values = {
@@ -40,15 +41,15 @@ prev_values = {
     "altitude": random.randint(altitude_range[0], altitude_range[1])*0.01
 }
 
-for i in range(10):
+for i in range(20):
     data = {
         "date_time": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
-        "temperature": relative_range(20, temp_range, prev_values["temperature"]*100)*0.01,
-        "pressure": relative_range(8, pressure_range, prev_values["pressure"]*100)*0.01,
-        "solar_radiation": relative_range(8, solar_radiation_range, prev_values["solar_radiation"]*100)*0.01,
-        "latitude": relative_range(15, latitude_range, prev_values["latitude"]*10000)*0.0001,
-        "longitude": relative_range(15, longitude_range, prev_values["longitude"]*10000)*0.0001,
-        "altitude": relative_range(2, altitude_range, prev_values["altitude"]*100)*0.01
+        "temperature": round(relative_range(20, temp_range, prev_values["temperature"]*100)*0.01,2),
+        "pressure": round(relative_range(8, pressure_range, prev_values["pressure"]*100)*0.01,2),
+        "solar_radiation": round(relative_range(8, solar_radiation_range, prev_values["solar_radiation"]*100)*0.01,2),
+        "latitude": round(relative_range(15, latitude_range, prev_values["latitude"]*10000)*0.0001,4),
+        "longitude": round(relative_range(15, longitude_range, prev_values["longitude"]*10000)*0.0001,4),
+        "altitude": round(relative_range(2, altitude_range, prev_values["altitude"]*100)*0.01,2)
     }
 
     prev_values = data.copy()

@@ -95,7 +95,7 @@ function updateChartsByCount(records_amount=10) {
             });
         });
         if (data.coords.length > 0) {
-            let coords = data.coords[data.coords.length-1];
+            let coords = data.coords[0];
             let latitude = coords[0];
             let longitude = coords[1];
             if (!marker) {
@@ -132,7 +132,7 @@ function updateChartsByRange(start_datetime, end_datetime) {
             });
         });
         if (data.coords.length > 0) {
-            let coords = data.coords[data.coords.length-1];
+            let coords = data.coords[0];
             let latitude = coords[0];
             let longitude = coords[1];
             if (!marker) {
