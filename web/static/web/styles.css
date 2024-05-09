@@ -73,7 +73,7 @@ input, button {
 }
 
 .chart {
-    height: 32vh;
+    height: 30.5vh;
 }
 
 @media (min-height: 900px) {
