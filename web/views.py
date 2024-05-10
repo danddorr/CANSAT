@@ -23,7 +23,7 @@ def get_charts_data(request, amount):
         x_data.append(data.date_time.strftime('%Y-%m-%d %H:%M:%S'))
         y_data_temp.append(data.temperature)
         y_data_pressure.append(data.pressure)
-        y_data_solar_radiation.append(data.solar_radiation)
+        y_data_solar_radiation.append(data.solar_radiation/220)
         y_data_altitude.append(data.altitude)
         data_gps.append([data.latitude, data.longitude])
 
